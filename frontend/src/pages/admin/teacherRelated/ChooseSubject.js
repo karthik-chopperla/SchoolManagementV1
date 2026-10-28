@@ -9,6 +9,7 @@ import { StyledTableCell, StyledTableRow } from '../../../components/styles';
 
 const ChooseSubject = ({ situation }) => {
     const params = useParams();
+    const { id: routeClassID, classID: assignedClassID, teacherID: routeTeacherID } = params;
     const navigate = useNavigate()
     const dispatch = useDispatch();
 
@@ -20,17 +21,15 @@ const ChooseSubject = ({ situation }) => {
 
     useEffect(() => {
         if (situation === "Norm") {
-            setClassID(params.id);
-            const classID = params.id
-            dispatch(getTeacherFreeClassSubjects(classID));
+            setClassID(routeClassID);
+            dispatch(getTeacherFreeClassSubjects(routeClassID));
         }
         else if (situation === "Teacher") {
-            const { classID, teacherID } = params
-            setClassID(classID);
-            setTeacherID(teacherID);
-            dispatch(getTeacherFreeClassSubjects(classID));
+            setClassID(assignedClassID);
+            setTeacherID(routeTeacherID);
+            dispatch(getTeacherFreeClassSubjects(assignedClassID));
         }
-    }, [situation]);
+    }, [dispatch, situation, routeClassID, assignedClassID, routeTeacherID]);
 
     if (loading) {
         return <div>Loading...</div>;

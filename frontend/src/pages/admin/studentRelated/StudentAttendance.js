@@ -20,6 +20,8 @@ const StudentAttendance = ({ situation }) => {
     const { subjectsList } = useSelector((state) => state.sclass);
     const { response, error, statestatus } = useSelector((state) => state.student);
     const params = useParams()
+    const { id: routeStudentID, studentID: routeSubjectStudentID, subjectID: routeSubjectID } = params;
+    const classID = userDetails?.sclassName?._id;
 
     const [studentID, setStudentID] = useState("");
     const [subjectName, setSubjectName] = useState("");
@@ -33,23 +35,21 @@ const StudentAttendance = ({ situation }) => {
 
     useEffect(() => {
         if (situation === "Student") {
-            setStudentID(params.id);
-            const stdID = params.id
-            dispatch(getUserDetails(stdID, "Student"));
+            setStudentID(routeStudentID);
+            dispatch(getUserDetails(routeStudentID, "Student"));
         }
         else if (situation === "Subject") {
-            const { studentID, subjectID } = params
-            setStudentID(studentID);
-            dispatch(getUserDetails(studentID, "Student"));
-            setChosenSubName(subjectID);
+            setStudentID(routeSubjectStudentID);
+            dispatch(getUserDetails(routeSubjectStudentID, "Student"));
+            setChosenSubName(routeSubjectID);
         }
-    }, [situation]);
+    }, [dispatch, situation, routeStudentID, routeSubjectStudentID, routeSubjectID]);
 
     useEffect(() => {
-        if (userDetails && userDetails.sclassName && situation === "Student") {
-            dispatch(getSubjectList(userDetails.sclassName._id, "ClassSubjects"));
+        if (classID && situation === "Student") {
+            dispatch(getSubjectList(classID, "ClassSubjects"));
         }
-    }, [dispatch, userDetails]);
+    }, [dispatch, classID, situation]);
 
     const changeHandler = (event) => {
         const selectedSubject = subjectsList.find(
