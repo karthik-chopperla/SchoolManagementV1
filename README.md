@@ -43,6 +43,32 @@ The School Management System is a web-based application built using the MERN (Mo
 - Backend: Node.js, Express.js
 - Database: MongoDB
 
+## Architecture
+
+```mermaid
+flowchart LR
+    User[Admin, Teacher, or Student] -->|Uses browser| Frontend
+    subgraph Frontend["Frontend — React, Material UI, Redux"]
+        UI[School Management UI]
+    end
+    subgraph Backend["Backend — Node.js and Express"]
+        API[REST API]
+        Models[Mongoose models]
+        API --> Models
+    end
+    subgraph Database["Database — MongoDB"]
+        DB[(School data)]
+    end
+    UI -->|HTTP/JSON requests<br/>REACT_APP_BASE_URL| API
+    Models -->|MONGO_URL| DB
+
+    Frontend -. "Deploy frontend" .-> Vercel[Vercel]
+    Backend -. "Deploy API" .-> Render[Render]
+    Database -. "Hosted database" .-> Atlas[MongoDB Atlas]
+```
+
+In production, deploy the frontend and backend as separate services. Configure the frontend's `REACT_APP_BASE_URL` with the public backend URL. Configure the backend's `MONGO_URL` with the MongoDB Atlas connection string and keep database credentials and other secrets in the backend hosting provider's environment settings. For local development, the frontend runs at `http://localhost:3000`, the API at `http://localhost:5000`, and MongoDB can run locally or on Atlas.
+
 <br>
 
 # Installation
